@@ -12,8 +12,8 @@ const PORT = 9334;
 const HOME = join(homedir(), 'Library/Application Support/chatgpt-image');
 const PROFILE = join(HOME, 'chrome-profile');
 const TABS = join(HOME, 'tabs'); // targetId -> owning pid, so orphans from killed runs get closed
-const LAST = join(HOME, 'last-run'); // mtime = when the last run finished; idle reaper keys off it
-const IDLE = 10 * 60000; // quit headless Chrome after this long unused, so the CDP port isn't open all day
+const LAST = join(HOME, 'last-run'); // mtime = last run start/finish; idle reaper keys off it
+const IDLE = 15000; // quit headless Chrome this soon after the last run, so the CDP port is only open while in use
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const COMPOSER = '.ProseMirror[contenteditable]';
 const ATTACHED = `document.querySelectorAll('form img[src^="data:"], form img[src^="blob:"]').length`;
@@ -43,6 +43,8 @@ const up = () => http('/json/version').then(r => r.ok, () => false);
 const alive = pid => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
 
 async function ensureChrome(visible) {
+  // Mark activity first so a reaper from the previous run doesn't quit Chrome under us.
+  mkdirSync(HOME, { recursive: true }); writeFileSync(LAST, '');
   if (await up()) {
     if (!visible) return sweep();
     // Login needs a real window; close the headless one holding the profile.

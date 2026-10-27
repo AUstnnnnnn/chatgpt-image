@@ -25,7 +25,7 @@ node ~/.claude/skills/chatgpt-image/gen.mjs --out <dir> [--ref path.png]... "Gen
 - Takes 30s to 3 min; parallel runs queue on ChatGPT's side (~1 min apart). Run with Bash `timeout: 360000`. Independent images: run in parallel in the background. Each run tracks only its own conversation through ChatGPT's API, so parallel runs can't pick up each other's images.
 - Prints saved file path(s) on stdout, and `conversation: <id>` on stderr as soon as the chat exists.
 - Each run closes its own tab on exit. Tabs left by killed runs are closed at the start of the next run.
-- The headless Chrome quits itself after 10 min with no runs, which closes port 9334. The next run cold-starts it (a few seconds). Runs killed with SIGKILL skip this, so Chrome stays up until the next run finishes.
+- The headless Chrome quits itself 15 s after the last run, which closes port 9334. The next run cold-starts it (a few seconds). Runs killed with SIGKILL skip this, so Chrome stays up until the next run finishes.
 
 ## Recovering images (never regenerate to recover)
 

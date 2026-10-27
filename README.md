@@ -28,6 +28,6 @@ node ~/.claude/skills/chatgpt-image/gen.mjs --library 4 --out ./assets   # pull 
 ## Things to know
 
 - This automates the ChatGPT website, which OpenAI's terms don't allow. They could flag your account. Use it on your own account and at your own risk.
-- While Chrome is running, port 9334 is open on localhost and any program on your machine can use it to reach your signed-in ChatGPT session. Chrome quits itself after 10 minutes without a run, which closes the port.
+- While Chrome is running, port 9334 is open on localhost and any program on your machine can use it to reach your signed-in ChatGPT session. Chrome quits itself 15 seconds after the last run, which closes the port, so it's only open while images are generating.
 - Finished chats are hidden from your ChatGPT history, not deleted. The images stay in your ChatGPT image library.
 - If OpenAI changes the chatgpt.com page, the selectors in `gen.mjs` will need updating. The comments in the code say which ones.
